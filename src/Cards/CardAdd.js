@@ -7,43 +7,47 @@ import {
 import { createCard, readDeck } from "../utils/api";
 
 function CardAdd () {
-    const initialFormState = {
+    const initialFormState = {                  // declares object for empty form
         front: "",
         back: "",
     };
     const history = useHistory()
     const { deckId } = useParams();
     const [deck, setDeck] = useState({})
-    const [cardData, setCardData] = useState({ ...initialFormState });
+    const [cardData, setCardData] = useState({ ...initialFormState });  // declaring state value for new card, initializing it as empty
 
-    useEffect(() => {
+    useEffect(() => {                                       // effect hook runs with 'deckId' dependency
         const abortController = new AbortController();
-        async function getDeck () {
-            const gotDeck = await readDeck( deckId, abortController.signal )
-            setDeck(gotDeck)
+        async function getDeck () {                         // 'getDeck' api call in asynchronous function
+            const gotDeck = await readDeck( deckId, abortController.signal ) // calls with deckId matching current url parameter
+            setDeck(gotDeck)                                // set state of 'deck' to result of api call
         }
         getDeck()
         return () => abortController.abort()
     }, [deckId])
     
-    const handleFront = ({target}) => {     
+    const handleFront = ({target}) => {     // change handler corresponding with data for front of card
         setCardData({
             ...cardData,
             front: target.value,
         });
     };
-    const handleBack = ({target}) => {
+    const handleBack = ({target}) => {      // change handler corresponding with data for back of card
         setCardData({
             ...cardData,
             back: target.value,
         });
     };
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {     // asynchronous submit handler function
         event.preventDefault();
-        await createCard(deckId, cardData)
-        setCardData({...initialFormState});
-        history.push(`/decks/${deckId}`)
+        await createCard(deckId, cardData)      // await result of 'createCard' api call
+        setCardData({...initialFormState});     // reset form to blank 
+        history.push(`/decks/${deckId}`)        // return to deck view
     }
+    const cardStyle = {
+        marginRight: "5px",
+    }
+
     return (
         <div>
             <nav aria-label="breadcrumb">
@@ -63,7 +67,7 @@ function CardAdd () {
                     <label htmlFor="back" className="form-label">Back</label>
                     <textarea type="text" className="form-control" id="back" placeholder="Back side of card" onChange={handleBack} value={cardData.back}></textarea>
                 </div>
-                <button type="submit" className="btn btn-secondary" onClick={() => history.push("/")}>Cancel</button>
+                <button type="submit" className="btn btn-secondary" style={cardStyle} onClick={() => history.push("/")}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>

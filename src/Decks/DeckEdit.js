@@ -7,37 +7,41 @@ import {
 import { updateDeck, readDeck } from "../utils/api";
 
 function DeckEdit () {
-    const history = useHistory()
-    const {deckId} = useParams()
-    const [deckData, setDeckData] = useState({});
+    const history = useHistory();
+    const { deckId } = useParams();
+    const [ deckData, setDeckData ] = useState({});
     
-    useEffect(() => {
+    useEffect(() => {       // effect hook, "deckId" dependency causes it to run each time the "deckId" url parameter changes
         const abortController = new AbortController();
         async function getDeck () {
-            const gotDeck = await readDeck( deckId, abortController.signal )
-            setDeckData(gotDeck)
+            const gotDeck = await readDeck( deckId, abortController.signal );
+            setDeckData(gotDeck);
             
         }
-        getDeck()
-        return () => abortController.abort()
-    }, [deckId])
-    const handleNameChange = ({target}) => {     
-        setDeckData({
+        getDeck();
+        return () => abortController.abort();
+    }, [deckId]);
+    const handleNameChange = ({target}) => {        // change handler for "name of deck"
+        setDeckData({                               // changes state variable which will be used late to run "updateDeck" api call
             ...deckData,
             name: target.value,
         });
     };
-    const handleDescriptionChange = ({target}) => {
-        setDeckData({
+    const handleDescriptionChange = ({target}) => {     // change handler for "name of deck"
+        setDeckData({                                   // changes state variable which will be used late to run "updateDeck" api call
             ...deckData,
             description: target.value,
         });
     };
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {         // async submit handler that runs "updateDeck" api
         event.preventDefault();
         await updateDeck(deckData)
-        history.push("/")
+        history.push("/")       // return to home page
     }
+    const cardStyle = {
+        marginRight: "5px",
+    }
+
     return (
         <div>
             <nav aria-label="breadcrumb">
@@ -57,7 +61,7 @@ function DeckEdit () {
                     <label htmlFor="description">Description</label>
                     <textarea type="text" className="form-control" id="description" onChange={handleDescriptionChange} value={deckData.description}/>
                 </div>
-                <button type="submit" className="btn btn-secondary" onClick={() => history.push(`/decks/${deckId}`)}>Cancel</button>
+                <button type="submit" className="btn btn-secondary" style={cardStyle} onClick={() => history.push(`/decks/${deckId}`)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>

@@ -10,25 +10,27 @@ function DeckCreate () {
         name: "",
         description: "",
     };
-    const [deckData, setDeckData] = useState({ ...initialFormState });
-    const handleNameChange = ({target}) => {     
+    const [deckData, setDeckData] = useState({ ...initialFormState });      // declares a state variable, initialized as a blank object that will be updated by the form
+    const handleNameChange = ({target}) => {     // handler for "name" of deck in form
         setDeckData({
             ...deckData,
             name: target.value,
         });
     };
-    const handleDescriptionChange = ({target}) => {
-        
+    const handleDescriptionChange = ({target}) => {     // handler for "description" value of deck in form
         setDeckData({
             ...deckData,
             description: target.value,
         });
     };
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {         // async submit handler that calls "createDeck" api and the resets the form ("deckData") to blank then returns to home
         event.preventDefault();
         await createDeck(deckData)
         setDeckData({...initialFormState});
         history.push("/")
+    }
+    const cardStyle = {
+        marginRight: "5px",
     }
     return (
         <div>
@@ -42,7 +44,7 @@ function DeckCreate () {
                     <label htmlFor="description">Description</label>
                     <textarea type="textarea" className="form-control" id="description" placeholder="Brief description of the deck" onChange={handleDescriptionChange} value={deckData.description}/>
                 </div>
-                <button type="submit" className="btn btn-secondary" onClick={() => history.push("/")}>Cancel</button>
+                <button type="submit" className="btn btn-secondary" style={cardStyle} onClick={() => history.push("/")}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>

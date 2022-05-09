@@ -11,31 +11,30 @@ function CardList ({ setCard }) {
     const {url} = useRouteMatch();
     const {deckId} = useParams();
     const [cards, setCards] = useState([])
+    useEffect(() => {               // effect hook that depends on the deckId url param which pulls the info from that deck
+        async function getCards() {
+            const deck = await readDeck(deckId)
+            setCards(deck.cards)    // sets 'cards' state to the value of 'cards' array from 'deck' object
+        }
+        getCards()
+    }, [deckId])
+    const handleClick = async ({target}) => {       // edit button that updates 'card' state which is lifted up and used by 'DeckHome'
+        const id = target.value
+        const cardClicked = await readCard(id)
+        setCard(cardClicked)
+        history.push(`${url}/cards/${target.value}/edit`) // tkaes user to edit screen for the card that was clicked
+    }
     const deleteFunction = (event) => {
         if (window.confirm("Delete this card?")) {
         deleteCard(event.target.value)
         history.push(`/decks/${deckId}`)
         }
     }
-    useEffect(() => {
-        async function getCards() {
-            const deck = await readDeck(deckId)
-            setCards(deck.cards)
-        }
-        getCards()
-    }, [deckId])
-    const handleClick = async ({target}) => {
-        const id = target.value
-        const cardClicked = await readCard(id)
-        setCard(cardClicked)
-        history.push(`${url}/cards/${target.value}/edit`)
-    }
     const cardStyle = {
-        justifyContent: "space-around",
-        marginRight: "10px",
+        marginRight: "5px",
     }
 
-    const cardList = cards.map((card, index) => {
+    const cardList = cards.map((card, index) => {       // for each card in the array, creates a bootstrap "card"
         return (
             <div className="card" key={index} value={card.id}>
                 <div className="card-body" value={card.id}>

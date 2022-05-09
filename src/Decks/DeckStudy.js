@@ -7,13 +7,13 @@ import CardStudy from "../Cards/CardStudy";
 import { readDeck } from "../utils/api";
 
 function DeckStudy () {
-    const {deckId} = useParams();
-    const [deck,setDeck] = useState(""); 
+    const { deckId } = useParams();
+    const [ deck, setDeck ] = useState(""); 
     
-    useEffect(() => {
+    useEffect(() => {       // "deckId" dependency means this runs each time a new deck is selected
         const abortController = new AbortController();
-        readDeck(deckId, abortController.signal)
-            .then(setDeck)
+        readDeck(deckId, abortController.signal)    // calls "readDeck" api (promise)
+            .then(setDeck)                          // sets deck state to the result of api promise
         
         return () => abortController.abort()
     },[deckId])

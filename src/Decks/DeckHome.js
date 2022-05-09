@@ -23,7 +23,7 @@ function DeckHome () {
     const [decks, setDecks] = useState([])
     const [card, setCard] = useState({})
     
-    useEffect(() => {
+    useEffect(() => {                                       // effect hook runs 'listDecks' to update state of 'decks'
         const abortController = new AbortController();
         listDecks(abortController.signal)
             .then(setDecks)
@@ -35,7 +35,7 @@ function DeckHome () {
         <div>
         <Switch>
             <Route exact path="/">
-                <DeckList decks={decks} />
+                <DeckList decks={decks} />      
             </Route>
             <Route exact path={"/decks/new"}>
                 <DeckCreate />

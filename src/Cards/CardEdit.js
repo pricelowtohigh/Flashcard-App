@@ -5,6 +5,7 @@ import {
   useHistory,
 } from "react-router-dom";
 import { readDeck, readCard, updateCard } from "../utils/api";
+import CardForm from "./CardForm";
 
 function CardEdit ( { card,  setCard } ) { 
     const history = useHistory()
@@ -66,18 +67,7 @@ function CardEdit ( { card,  setCard } ) {
                 </ol>
             </nav>
             <h1>Edit Card</h1>
-            <form name="addCard" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="front" className="form-label">Front</label>
-                    <textarea type="text" className="form-control" rows="3" id="front" onChange={handleFrontChange}  value={front}></textarea>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="back" className="form-label">Back</label>
-                    <textarea type="text" className="form-control" rows="3" id="back" onChange={handleBackChange}  value={back}></textarea>
-                </div>
-                <button type="button" className="btn btn-secondary" style={cardStyle} onClick={() => history.push(`/decks/${deckId}`)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Submit</button>
-            </form>
+            <CardForm handleSubmit={handleSubmit} handleFrontChange={handleFrontChange} handleBackChange={handleBackChange} front={front} back={back} deckId={deckId}/>
         </div>
     )
 }
